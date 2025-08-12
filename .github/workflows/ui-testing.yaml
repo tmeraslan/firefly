@@ -30,45 +30,48 @@ jobs:
 
       - name: Install Chrome & ChromeDriver
         run: |
-          sudo apt update
-          sudo apt install -y wget unzip xvfb libxi6 libgbm-dev libnss3 libxshmfence1 libasound2t64 curl jq
 
-          # Install latest Chrome
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+            sudo apt-get update
+            apt-get install -y google-chrome-stable
+          # sudo apt update
+          # sudo apt install -y wget unzip xvfb libxi6 libgbm-dev libnss3 libxshmfence1 libasound2t64 curl jq
 
-          # Get Chrome full & major version
-          CHROME_FULL_VERSION=$(google-chrome --version | grep -oP "\d+\.\d+\.\d+\.\d+")
-          CHROME_MAJOR_VERSION=$(echo $CHROME_FULL_VERSION | cut -d '.' -f 1)
-          echo "Detected Chrome version: $CHROME_FULL_VERSION (major: $CHROME_MAJOR_VERSION)"
+          # # Install latest Chrome
+          # wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          # sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
-          # Try exact version
-          DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_FULL_VERSION}/linux64/chromedriver-linux64.zip"
-          if wget -q --spider "$DRIVER_URL"; then
-            echo "Downloading ChromeDriver for exact version $CHROME_FULL_VERSION"
-            wget -q -O chromedriver.zip "$DRIVER_URL"
-          else
-            # Try last known good stable
-            LATEST_DRIVER_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.Stable.version')
-            DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${LATEST_DRIVER_VERSION}/linux64/chromedriver-linux64.zip"
-            if wget -q --spider "$DRIVER_URL"; then
-              echo "Using last known good stable: $LATEST_DRIVER_VERSION"
-              wget -q -O chromedriver.zip "$DRIVER_URL"
-            else
-              # Try major version latest
-              echo "Falling back to major version $CHROME_MAJOR_VERSION latest"
-              DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_MAJOR_VERSION}.0.0.0/linux64/chromedriver-linux64.zip"
-              wget -q -O chromedriver.zip "$DRIVER_URL"
-            fi
-          fi
+          # # Get Chrome full & major version
+          # CHROME_FULL_VERSION=$(google-chrome --version | grep -oP "\d+\.\d+\.\d+\.\d+")
+          # CHROME_MAJOR_VERSION=$(echo $CHROME_FULL_VERSION | cut -d '.' -f 1)
+          # echo "Detected Chrome version: $CHROME_FULL_VERSION (major: $CHROME_MAJOR_VERSION)"
 
-          unzip chromedriver.zip
-          sudo mv */chromedriver /usr/local/bin/chromedriver
-          sudo chmod +x /usr/local/bin/chromedriver
+          # # Try exact version
+          # DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_FULL_VERSION}/linux64/chromedriver-linux64.zip"
+          # if wget -q --spider "$DRIVER_URL"; then
+          #   echo "Downloading ChromeDriver for exact version $CHROME_FULL_VERSION"
+          #   wget -q -O chromedriver.zip "$DRIVER_URL"
+          # else
+          #   # Try last known good stable
+          #   LATEST_DRIVER_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.Stable.version')
+          #   DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${LATEST_DRIVER_VERSION}/linux64/chromedriver-linux64.zip"
+          #   if wget -q --spider "$DRIVER_URL"; then
+          #     echo "Using last known good stable: $LATEST_DRIVER_VERSION"
+          #     wget -q -O chromedriver.zip "$DRIVER_URL"
+          #   else
+          #     # Try major version latest
+          #     echo "Falling back to major version $CHROME_MAJOR_VERSION latest"
+          #     DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CHROME_MAJOR_VERSION}.0.0.0/linux64/chromedriver-linux64.zip"
+          #     wget -q -O chromedriver.zip "$DRIVER_URL"
+          #   fi
+          # fi
 
-          rm -rf chromedriver.zip google-chrome-stable_current_amd64.deb
-          mkdir -p /tmp/chrome-user-data
-          chmod 755 /tmp/chrome-user-data
+          # unzip chromedriver.zip
+          # sudo mv */chromedriver /usr/local/bin/chromedriver
+          # sudo chmod +x /usr/local/bin/chromedriver
+
+          # rm -rf chromedriver.zip google-chrome-stable_current_amd64.deb
+          # mkdir -p /tmp/chrome-user-data
+          # chmod 755 /tmp/chrome-user-data
 
       - name: Cleanup existing Chrome processes
         run: |
