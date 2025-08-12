@@ -37,6 +37,6 @@ jobs:
         env:
           CI: true
           HEADLESS: true
-          FIREFLY_URL: http://18.203.139.174:8080
+          FIREFLY_URL: http://34.247.166.51:8080
         run: |
           pytest tests/ -v
