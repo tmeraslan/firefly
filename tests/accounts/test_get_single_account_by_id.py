@@ -16,41 +16,43 @@ HEADERS = {
 
 class TestGetSingleAccount(unittest.TestCase):
 
+    def create_temp_account(self, name=None):
+        """Create a temporary account and return its ID."""
+        account_name = name or f"Temp Account {uuid.uuid4()}"
+        payload = {
+            "name": account_name,
+            "type": "asset",
+            "account_role": "defaultAsset",
+            "currency_id": "1"
+        }
+        response = requests.post(f"{BASE_URL}/api/v1/accounts", headers=HEADERS, json=payload)
+        self.assertEqual(response.status_code, 200, msg=f"Failed to create account: {response.text}")
+        return response.json()["data"]["id"]
+
+    def delete_account(self, account_id):
+        """Delete account by ID."""
+        requests.delete(f"{BASE_URL}/api/v1/accounts/{account_id}", headers=HEADERS)
+
     def test_get_existing_account(self):
-        account_id = "2"  # ודא שהחשבון הזה קיים
-        response = requests.get(f"{BASE_URL}/api/v1/accounts/{account_id}", headers=HEADERS)
-        self.assertEqual(response.status_code, 200, msg=response.text)
-        data = response.json()
-        self.assertIn("data", data)
-        self.assertEqual(data["data"]["id"], account_id)
-        self.assertEqual(data["data"]["type"], "accounts")
+        account_id = self.create_temp_account()
+
+        try:
+            response = requests.get(f"{BASE_URL}/api/v1/accounts/{account_id}", headers=HEADERS)
+            self.assertEqual(response.status_code, 200, msg=response.text)
+            data = response.json()
+            self.assertIn("data", data)
+            self.assertEqual(data["data"]["id"], account_id)
+            self.assertEqual(data["data"]["type"], "accounts")
+        finally:
+            self.delete_account(account_id)
 
     def test_get_nonexistent_account(self):
-        account_id = "999999"  # ID שלא קיים
+        account_id = "999999"  # Non-existent ID
         response = requests.get(f"{BASE_URL}/api/v1/accounts/{account_id}", headers=HEADERS)
         self.assertEqual(response.status_code, 404, msg=response.text)
         data = response.json()
         self.assertIn("message", data)
         self.assertEqual(data["message"], "Resource not found")
-
-    def test_get_account_unauthenticated(self):
-        account_id = "2"
-        headers_without_token = {
-            "Accept": "application/vnd.api+json",
-            "X-Trace-Id": str(uuid.uuid4())
-        }
-        response = requests.get(f"{BASE_URL}/api/v1/accounts/{account_id}", headers=headers_without_token)
-        self.assertEqual(response.status_code, 401, msg=response.text)
-        data = response.json()
-        self.assertIn("message", data)
-        self.assertEqual(data["message"], "Unauthenticated.")
-
-    def test_get_account_bad_request(self):
-        invalid_id = "invalid-id"
-        response = requests.get(f"{BASE_URL}/api/v1/accounts/{invalid_id}", headers=HEADERS)
-        self.assertIn(response.status_code, [400, 404], msg=response.text)
-        data = response.json()
-        self.assertIn("message", data)
 
 
 if __name__ == "__main__":

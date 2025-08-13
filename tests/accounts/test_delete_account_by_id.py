@@ -45,13 +45,12 @@ class TestDeleteAccountAPI(unittest.TestCase):
         account_id = self.create_temp_account()
         delete_url = DELETE_URL.format(id=account_id)
         headers = HEADERS.copy()
-        headers.pop("Authorization")  # בלי טוקן
+        headers.pop("Authorization") 
         response = requests.delete(delete_url, headers=headers)
         self.assertEqual(response.status_code, 401)
         self.assertIn("Unauthenticated", response.text)
 
     def test_delete_account_invalid_format(self):
-        # מזהה לא תקין – נצפה ל־404 (ולא 400)
         bad_id = "!!invalid_id!!"
         delete_url = DELETE_URL.format(id=bad_id)
         response = requests.delete(delete_url, headers=HEADERS)
