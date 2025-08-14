@@ -36,7 +36,7 @@ class TestFireflyAccountsAPI(unittest.TestCase):
             self.assertIn("name", account["attributes"])
 
     def test_number_of_accounts_not_zero(self):
-        """בודק שיש לפחות חשבון אחד"""
+        #Checks that there is at least one account
         response = requests.get(GET_LIST_ACCOUNTS_URL + "?limit=999", headers=HEADERS)
 
         self.assertEqual(response.status_code, 200, f"Expected 200 but got {response.status_code}")
