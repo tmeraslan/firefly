@@ -3,6 +3,7 @@ import requests
 import uuid
 from tests.firefly_credentials import get_firefly_credentials
 
+
 TOKEN = get_firefly_credentials()["token"]
 BASE_URL = get_firefly_credentials()["base_url"]
 ACCOUNTS_URL = BASE_URL + "/api/v1/accounts"
