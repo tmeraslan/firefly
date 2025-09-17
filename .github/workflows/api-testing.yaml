@@ -1,5 +1,5 @@
 # File: .github/workflows/api-testing.yaml
-name: Run Tests
+name: API Tests
 
 on:
   pull_request:
