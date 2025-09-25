@@ -1,5 +1,5 @@
 # File: .github/workflows/api-testing.yaml
-name: Run Tests
+name: API Tests
 
 on:
   pull_request:
@@ -28,7 +28,7 @@ jobs:
     - name: Run tests
       env:
           CI: true
-          FIREFLY_URL: http://108.129.187.158:8080
+          FIREFLY_URL: http://54.195.180.28:8080
       run: |
         export PYTHONPATH=$PYTHONPATH:$(pwd)
         pytest -v
