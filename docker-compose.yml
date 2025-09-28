@@ -10,7 +10,7 @@ services:
     networks:
       - firefly_iii
     ports:
-      - 8082:8082
+      - 8080:8080
     depends_on:
       - db
   db:
