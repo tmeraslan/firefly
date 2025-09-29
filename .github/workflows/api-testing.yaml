@@ -28,7 +28,7 @@ jobs:
     - name: Run tests
       env:
           CI: true
-          FIREFLY_URL: http://54.195.180.28:8080
+          FIREFLY_URL: http://34.245.191.147:8082
       run: |
         export PYTHONPATH=$PYTHONPATH:$(pwd)
         pytest -v
