@@ -13,7 +13,7 @@ jobs:
 
     env:
       # יישור לכתובת החיצונית שלך (אותה כמו ב-UI)
-      FIREFLY_URL: "http://34.245.191.147:8082"
+      FIREFLY_URL: "http://108.130.59.157:8082"
       # חשוב! טוקן אישי שנוצר באותו שרת (34.245.191.147:8082) עבור המשתמש הנכון
       FIREFLY_API_TOKEN: ${{ secrets.FIREFLY_API_TOKEN }}
       CI: "true"
