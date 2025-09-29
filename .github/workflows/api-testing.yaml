@@ -1,20 +1,28 @@
+
 # File: .github/workflows/api-testing.yaml
 name: API Tests
 
 on:
   pull_request:
-    branches: 
+    branches:
       - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      # יישור לכתובת החיצונית שלך (אותה כמו ב-UI)
+      FIREFLY_URL: "http://34.245.191.147:8082"
+      # חשוב! טוקן אישי שנוצר באותו שרת (34.245.191.147:8082) עבור המשתמש הנכון
+      FIREFLY_API_TOKEN: ${{ secrets.FIREFLY_API_TOKEN }}
+      CI: "true"
+
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Python 3.12
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
@@ -22,13 +30,74 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest requests
+        pip install pytest requests pytest-cov
+
+    # שלב דיאגנוסטיקה ברור לפני pytest
+    - name: Preflight: check API base & token
+      run: |
+        set -Eeuo pipefail
+        BASE="${FIREFLY_URL%/}"
+        echo "Checking base: $BASE"
+
+        echo -e "\n== /api/v1/ping (no auth) =="
+        curl -i --max-time 10 "$BASE/api/v1/ping" || { echo "Ping failed"; exit 1; }
+
+        echo -e "\n== /api/v1/about (with auth) =="
+        curl -i --max-time 15 -H "Accept: application/json" \
+             -H "Authorization: Bearer $FIREFLY_API_TOKEN" \
+             "$BASE/api/v1/about" || { echo "Token check failed"; exit 1; }
+
+        echo -e "\n== sanity: GET accounts (with auth) =="
+        curl -i --max-time 15 -H "Accept: application/json" \
+             -H "Authorization: Bearer $FIREFLY_API_TOKEN" \
+             "$BASE/api/v1/accounts?limit=1" || true
+
+    - name: Run tests
+      run: |
+        set -Eeuo pipefail
+        export PYTHONPATH=$PYTHONPATH:$(pwd)
+        # במידה והטסטים שלך קוראים משתנים אחרים, נכסה את כולם:
+        export BASE_URL="${FIREFLY_URL%/}"
+        export API_BASE="${FIREFLY_URL%/}"
+        export API_TOKEN="${FIREFLY_API_TOKEN}"
+        pytest -v -rA
+
+
+
+
+
+
+# # File: .github/workflows/api-testing.yaml
+# name: API Tests
+
+# on:
+#   pull_request:
+#     branches: 
+#       - main
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - uses: actions/checkout@v4
+
+#     - name: Set up Python 3.12
+#       uses: actions/setup-python@v4
+#       with:
+#         python-version: '3.12'
+
+#     - name: Install dependencies
+#       run: |
+#         pip install --upgrade pip
+#         pip install -r requirements.txt
+#         pip install pytest requests
 
         
-    - name: Run tests
-      env:
-          CI: true
-          FIREFLY_URL: http://34.245.191.147:8082
-      run: |
-        export PYTHONPATH=$PYTHONPATH:$(pwd)
-        pytest -v
+#     - name: Run tests
+#       env:
+#           CI: true
+#           FIREFLY_URL: http://54.195.180.28:8080
+#       run: |
+#         export PYTHONPATH=$PYTHONPATH:$(pwd)
+#         pytest -v
