@@ -2,7 +2,7 @@ import unittest
 import requests
 import uuid
 from tests.firefly_credentials import get_firefly_credentials
-
+import os
 
 
 TOKEN = get_firefly_credentials()["token"]

@@ -1,5 +1,7 @@
 import unittest
 import requests
+import os
+
 
 from tests.firefly_credentials import get_firefly_credentials
 

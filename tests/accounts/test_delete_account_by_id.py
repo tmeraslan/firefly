@@ -2,6 +2,9 @@ import unittest
 import uuid
 import requests
 from tests.firefly_credentials import get_firefly_credentials
+import os
+
+
 
 TOKEN = get_firefly_credentials()["token"]
 BASE_URL = get_firefly_credentials()["base_url"]
