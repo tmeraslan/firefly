@@ -7,10 +7,15 @@ from tests.firefly_credentials import get_firefly_credentials
 
 TOKEN = get_firefly_credentials()["token"]
 BASE_URL = get_firefly_credentials()["base_url"]+"/api/v1/attachments"
+# HEADERS = {
+#     "Authorization": f"Bearer {TOKEN}",
+#     "Accept": "application/vnd.api+json",
+#     "X-Trace-Id": str(uuid.uuid4())
+# }
 HEADERS = {
-    "Authorization": f"Bearer {TOKEN}",
-    "Accept": "application/vnd.api+json",
-    "X-Trace-Id": str(uuid.uuid4())
+    "Authorization": f"Bearer {os.getenv('FIREFLY_PERSONAL_TOKEN')}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
 }
 
 class TestAttachmentsAPI(unittest.TestCase):

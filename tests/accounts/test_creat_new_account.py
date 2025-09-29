@@ -9,10 +9,15 @@ TOKEN = get_firefly_credentials()["token"]
 BASE_URL = get_firefly_credentials()["base_url"]
 ACCOUNTS_URL = BASE_URL + "/api/v1/accounts"
 
+# HEADERS = {
+#     "Authorization": f"Bearer {TOKEN}",
+#     "Accept": "application/json",
+#     "Content-Type": "application/json"
+# }
 HEADERS = {
-    "Authorization": f"Bearer {TOKEN}",
+    "Authorization": f"Bearer {os.getenv('FIREFLY_PERSONAL_TOKEN')}",
     "Accept": "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
 }
 
 class TestFireflyCreateAccount(unittest.TestCase):

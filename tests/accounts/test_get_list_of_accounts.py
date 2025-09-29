@@ -6,9 +6,14 @@ from tests.firefly_credentials import get_firefly_credentials
 TOKEN = get_firefly_credentials()["token"]
 BASE_URL = get_firefly_credentials()["base_url"]
 GET_LIST_ACCOUNTS_URL = BASE_URL + "/api/v1/accounts"
+# HEADERS = {
+#     "Authorization": f"Bearer {TOKEN}",
+#     "Accept": "application/json"
+# }
 HEADERS = {
-    "Authorization": f"Bearer {TOKEN}",
-    "Accept": "application/json"
+    "Authorization": f"Bearer {os.getenv('FIREFLY_PERSONAL_TOKEN')}",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
 }
 
 class TestFireflyAccountsAPI(unittest.TestCase):
