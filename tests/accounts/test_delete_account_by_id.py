@@ -12,17 +12,17 @@ BASE_URL = get_firefly_credentials()["base_url"]
 DELETE_URL = f"{BASE_URL}/api/v1/accounts/{{id}}"
 CREATE_ACCOUNTS_URL = BASE_URL + "/api/v1/accounts"
 
-# HEADERS = {
-#     "Authorization": f"Bearer {TOKEN}",
-#     "Content-Type": "application/json",
-#     "Accept": "application/json",
-#     "X-Trace-Id": str(uuid.uuid4())
-# }
 HEADERS = {
-    "Authorization": f"Bearer {os.getenv('FIREFLY_PERSONAL_TOKEN')}",
-    "Accept": "application/json",
+    "Authorization": f"Bearer {TOKEN}",
     "Content-Type": "application/json",
+    "Accept": "application/json",
+    "X-Trace-Id": str(uuid.uuid4())
 }
+# HEADERS = {
+#     "Authorization": f"Bearer {os.getenv('FIREFLY_PERSONAL_TOKEN')}",
+#     "Accept": "application/json",
+#     "Content-Type": "application/json",
+# }
 
 class TestDeleteAccountAPI(unittest.TestCase):
     def create_temp_account(self):
