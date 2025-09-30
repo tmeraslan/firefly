@@ -1,6 +1,6 @@
 services:
   app:
-    image: fireflyiii/core:latest
+    image: tameer/firefly:0.0.23
     hostname: app
     container_name: firefly_iii_core
     restart: always
@@ -48,3 +48,7 @@ volumes:
 networks:
   firefly_iii:
     driver: bridge
+
+
+
+#image: fireflyiii/core:latest
